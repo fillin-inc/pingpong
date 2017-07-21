@@ -97,3 +97,19 @@ func TestHandlerJSON(t *testing.T) {
 		)
 	}
 }
+
+func BenchmarkHandler(b *testing.B) {
+	ts := httptest.NewServer(http.HandlerFunc(Handler))
+	defer ts.Close()
+	for i := 0; i < b.N; i++ {
+		http.Get(ts.URL)
+	}
+}
+
+func BenchmarkHandlerJSON(b *testing.B) {
+	ts := httptest.NewServer(http.HandlerFunc(HandlerJSON))
+	defer ts.Close()
+	for i := 0; i < b.N; i++ {
+		http.Get(ts.URL)
+	}
+}
