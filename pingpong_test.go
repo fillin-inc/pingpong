@@ -2,6 +2,7 @@ package pingpong
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -112,4 +113,14 @@ func BenchmarkHandlerJSON(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		http.Get(ts.URL)
 	}
+}
+
+func ExampleHandler() {
+	ts := httptest.NewServer(http.HandlerFunc(Handler))
+	defer ts.Close()
+
+	res, _ := http.Get(ts.URL)
+	body, _ := ioutil.ReadAll(res.Body)
+	fmt.Println(string(body))
+	// Output: Pong
 }
