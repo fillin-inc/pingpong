@@ -10,8 +10,7 @@ test:
 
 ## lint
 lint:
-	golint .
-	go vet .
+	golangci-lint run ./...
 
 ## benchmark
 benchmark:

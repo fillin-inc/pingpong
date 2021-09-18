@@ -89,7 +89,11 @@ func TestHandlerJSON(t *testing.T) {
 
 	body, _ := ioutil.ReadAll(res.Body)
 	j := jsonRes{}
-	json.Unmarshal(body, &j)
+	err = json.Unmarshal(body, &j)
+	if err != nil {
+		t.Error(err)
+	}
+
 	if j.Msg != e.Body {
 		t.Errorf(
 			"Handler return unexpected Body(expected:%s actual:%s)",
@@ -103,7 +107,10 @@ func BenchmarkHandler(b *testing.B) {
 	ts := httptest.NewServer(http.HandlerFunc(Handler))
 	defer ts.Close()
 	for i := 0; i < b.N; i++ {
-		http.Get(ts.URL)
+		_, err := http.Get(ts.URL)
+		if err != nil {
+			b.Error(err)
+		}
 	}
 }
 
@@ -111,7 +118,10 @@ func BenchmarkHandlerJSON(b *testing.B) {
 	ts := httptest.NewServer(http.HandlerFunc(HandlerJSON))
 	defer ts.Close()
 	for i := 0; i < b.N; i++ {
-		http.Get(ts.URL)
+		_, err := http.Get(ts.URL)
+		if err != nil {
+			b.Error(err)
+		}
 	}
 }
 
