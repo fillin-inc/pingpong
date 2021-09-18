@@ -2,7 +2,7 @@ package pingpong
 
 import (
 	"encoding/json"
-	"io"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -21,19 +21,19 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.Header().Set("Content-Length", strconv.Itoa(len(PONG)))
 	w.WriteHeader(http.StatusOK)
-	io.WriteString(w, PONG)
+	fmt.Fprint(w, PONG)
 }
 
 // HandlerJSON is a HandlerFunc that returns a response in application/json format
 func HandlerJSON(w http.ResponseWriter, r *http.Request) {
-	res, _ := json.Marshal(jsonRes{
+	jsonRes, _ := json.Marshal(jsonRes{
 		Msg:       PONG,
 		CreatedAt: time.Now(),
 	})
-	resStr := string(res)
+	res := string(jsonRes)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", strconv.Itoa(len(resStr)))
+	w.Header().Set("Content-Length", strconv.Itoa(len(res)))
 	w.WriteHeader(http.StatusOK)
-	io.WriteString(w, resStr)
+	fmt.Fprint(w, res)
 }
